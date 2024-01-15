@@ -14,7 +14,7 @@ const Button = ({
   return (
    <StyledButton 
       type={type} 
-      variant={variant} 
+      $variant={variant} 
       onClick={onClick}
     >
       {label}

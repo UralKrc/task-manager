@@ -27,7 +27,7 @@ const theme = {
   },
   borders: {
     default: '1px solid #bdc3c7',
-    radius: '0.25rem',
+    radius: '0.5rem',
   },
   input: {
     border: '1px solid #3498db',
@@ -44,6 +44,8 @@ const theme = {
     borderRadius: '0.25rem',
     padding: '0.5rem',
     margin: '0.25rem 0',
+    fontSize: '0.825rem',
+    backgroundColor: '#f8d7da',
   },
   success: {
     color: '#2ecc71',
@@ -51,6 +53,8 @@ const theme = {
     borderRadius: '0.25rem',
     padding: '0.5rem',
     margin: '0.25rem 0',
+    fontSize: '0.825rem',
+    backgroundColor: '#c9e6cb',
   },
 };
 

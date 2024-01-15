@@ -1,45 +1,68 @@
 import { useEffect, useState } from "react";
-import { Container, Subtitle, Title } from "./styles";
-import { Task as TTask } from "../../helpers/types";
+import { Container, ErrorContainer, Subtitle, Title } from "./styles";
 import Tasks from "../../components/Tasks";
 import Form from "../../components/Form";
+import useFetch from "../../hooks/useFetch";
+import Loader from "../../components/Loader";
+import ErrorMessage from "../../components/ErrorMessage";
+import { TaskItem } from "../../constants/types";
+import { addTask, deleteTask, editTask } from "../../helpers/taskManagement";
 
 const TagManager = () => {
-  const [tasks, setTasks] = useState<TTask[]>([]);
-
-  const fetchData = async () => {
-    const URL = 'https://mocki.io/v1/0d06cad8-e233-459c-badf-54f8c1026cc7';
-    try {
-      const response = await fetch(URL);
-      const result = await response.json();
-      setTasks(result.localTags);
-    } catch(err) {
-      console.log('Something went wrong: ', err);
-    }
-  };
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const URL = 'https://mocki.io/v1/0d06cad8-e233-459c-badf-54f8c1026cc7';
+  const {
+    data,
+    loading,
+    error,
+  } = useFetch<TaskItem[]>(URL)
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (data) {
+      setTasks(data);
+    }
+  }, [data]);
 
-  const deleteTask = (index: number) => {
-    setTasks(tasks.filter((_, i) => i !== index));
+  const handleAdd = (newTask: TaskItem) => {
+    setTasks(addTask(data, newTask));
   };
 
-  const editTask = () => {
-    console.log('edit');
-  }
+  const handleDelete = (index: number) => {
+    setTasks(deleteTask(data, index));
+  };
 
+  const handleEdit = (index: number, updatedTask: TaskItem) => {
+    setTasks(editTask(data, index, updatedTask));
+  };
+
+console.log(tasks, 1);
   return (
     <Container>
-      <Title>Welcome to Task Manager</Title>
-      <Subtitle>You can add, edit or delete task.</Subtitle>
-      <Form />
-      {/* <form onSubmit={handleSubmit}>
-        <input value={input} onChange={(e) => setInput(e.target.value)} required />
-        <button type="submit">{editIndex !== null ? 'Edit Tag' : 'Add Tag'}</button>
-      </form> */}
-      <Tasks tasks={tasks} deleteTask={deleteTask} editTask={editTask} />
+      {
+        error ? (
+          <ErrorContainer>
+            <ErrorMessage label="Unexpected error. Please reload the page." />
+          </ErrorContainer>
+        ) : (
+          <>
+            {
+              loading ? 
+              (
+                <Loader />
+              )
+                : 
+              (
+                <>
+                  <Title>Welcome to Task Manager</Title>
+                  <Subtitle>You can add, edit or delete task.</Subtitle>
+                  <Form  addTask={handleAdd} />
+                  <Tasks tasks={tasks} deleteTask={handleDelete} editTask={handleEdit} />
+                </>
+              )
+            }
+          </>
+        )
+      }
     </Container>
   );
 };

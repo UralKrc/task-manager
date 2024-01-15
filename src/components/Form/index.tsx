@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formConfiguration } from '../../helpers/formConfiguration';
 import Button from '../Button';
-import { Container, InputContainer, Label, StyledForm, Subtitle } from './styles';
+import { Container, InputContainer, Label, StyledForm, Subtitle, SuccessMessage } from './styles';
 import Input from '../Input';
+import ErrorMessage from '../ErrorMessage';
+import { FormState } from '../../constants/types';
+import { initialFormState } from '../../helpers/initialFormState';
 
-const Form = () => {
-  const [formState, setFormState] = useState(null);
+const Form = ({ addTask }: { addTask: (item: number) => void; }) => {
+  const [formState, setFormState] = useState(initialFormState);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     constructFormState();
   }, []);
 
-  console.log(formState);
   const constructFormState = () => {
-    let preparedObj = {};
+    const preparedObj: FormState = {};
     formConfiguration.forEach((el) => {
       preparedObj[el.stateField] = {
         value: el.stateDefault,
@@ -25,7 +27,7 @@ const Form = () => {
     setFormState(preparedObj);
   };
 
-  const onChangeHandler = (field, value) => {
+  const onChangeHandler = (field: string, value: string) => {
     setFormState({
       ...formState,
       [field]: {
@@ -35,7 +37,7 @@ const Form = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const hasErrors = handleFormValidations();
 
@@ -43,7 +45,10 @@ const Form = () => {
       setSuccess(false);
       return;
     }
+
     setSuccess(true);
+    setFormState({});
+    addTask;
   };
 
   const handleFormValidations = () => {
@@ -54,12 +59,12 @@ const Form = () => {
       updatedState;
     if (name.value?.length < 3) {
       updatedState.name.error =
-        'Name cannot be less than 3 characters';
+        'Name cannot be less than 3 characters.';
       error = true;
     }
     if (description.value?.length < 3) {
       updatedState.description.error =
-        'Description cannot be less than 3 characters';
+        'Description cannot be less than 3 characters.';
       error = true;
     }
 
@@ -87,14 +92,14 @@ const Form = () => {
               placeholder={el.placeholder}
             />
             {formState?.[el?.stateField]?.error && (
-              <p className="error">{formState?.[el?.stateField].error}</p>
+              <ErrorMessage label={formState?.[el?.stateField].error} />
             )}
           </InputContainer>
         ))}
 
         <Button type="submit" variant="primary" label="Add task" />
         {success && (
-          <p className="success">Task added successfully!</p>
+          <SuccessMessage className="success">Task added successfully!</SuccessMessage>
         )}
       </StyledForm>
     </Container>

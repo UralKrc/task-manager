@@ -4,8 +4,9 @@ export const Container = styled.div`
   border: ${({ theme }) => theme.borders.default};
   border-radius: ${({ theme }) => theme.borders.radius};
   padding: 1rem;
-  margin: 3rem 0;
+  margin: 3rem auto;
   font-family: sans-serif;
+  max-width: 720px;
 `;
 
 export const Subtitle = styled.p`
@@ -30,4 +31,14 @@ export const InputContainer = styled.div`
 export const Label = styled.label`
   color: ${({ theme }) => theme.colors.primary};
   font-weight: bold;
+`;
+
+export const SuccessMessage = styled.p`
+  color: ${({ theme }) => theme.success.color};
+  border: ${({ theme }) => theme.success.border};
+  border-radius: ${({ theme }) => theme.success.borderRadius};
+  padding: ${({ theme }) => theme.success.padding};
+  margin: ${({ theme }) => theme.success.margin};
+  font-size: ${({ theme }) => theme.error.fontSize};
+  background-color: ${({ theme }) => theme.success.backgroundColor};
 `;

@@ -1,9 +1,14 @@
 import styled from "styled-components";
 
 export const TaskList = styled.div`
+
+`;
+
+export const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  font-family: sans-serif;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -14,8 +19,14 @@ export const TaskList = styled.div`
   }
 `;
 
+export const Title = styled.h2`
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.primary};
+  margin-bottom: 1rem;
+`;
 
-export const TaskItem = styled.div`
+export const Task = styled.div`
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
