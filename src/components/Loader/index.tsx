@@ -1,9 +1,8 @@
-import React from 'react';
 import { StyledLoader, Spinner } from './styles';
 
-const Loader = (props: React.HTMLAttributes<HTMLDivElement>) => {
+const Loader = () => {
   return (
-    <StyledLoader {...props}>
+    <StyledLoader>
       <Spinner />
     </StyledLoader>
   );

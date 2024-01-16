@@ -5,7 +5,7 @@ export const Label = styled.p.withConfig({
 })<{
   type?: 'success' | 'error';
 }>`
-  color: ${({ theme, type }) => type === 'error' ? theme.error.color : theme.error.color};
+  color: ${({ theme, type }) => type === 'error' ? theme.error.color : theme.success.color};
   border: ${({ theme, type }) => type === 'error' ? theme.error.border : theme.success.border};
   border-radius: ${({ theme, type }) => type === 'error' ? theme.error.borderRadius : theme.success.borderRadius};
   padding: ${({ theme, type }) => type === 'error' ? theme.error.padding : theme.success.padding};

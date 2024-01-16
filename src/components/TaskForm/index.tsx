@@ -1,41 +1,34 @@
 import { useEffect, useState } from 'react';
 import { formConfiguration } from '../../helpers/formConfiguration';
 import Button from '../Button';
-import { Container, InputContainer, Label, StyledForm, Subtitle, SuccessMessage } from './styles';
+import { Container, InputContainer, Label, Form, Subtitle, Title } from './styles';
 import Input from '../Input';
-import Message from '../Message';
+import Notification from '../Notification';
 import { initialFormState } from '../../helpers/initialFormState';
 import { FormState } from './types';
+import { TaskItem } from '../../views/TaskManagement/types';
 
-const Form = (
+const TaskForm = (
   { 
     onSubmit, 
     isEditMode = false,
+    title,
+    subtitle,
+    buttonLabel,
+    successMessage,
+    handleClose,
   } : 
   { 
-    onSubmit: (item: number) => void;  
+    title: string;
+    subtitle: string;
+    buttonLabel: string; 
+    successMessage: string;
+    onSubmit: (task: TaskItem, id?: number) => void;
     isEditMode?: boolean;
+    handleClose?: () => void,
   }) => {
   const [formState, setFormState] = useState(initialFormState);
   const [success, setSuccess] = useState(false);
-
-  const subtitle = 
-    isEditMode ? 
-      'Please edit the task name or description.' 
-      : 
-      'Please enter the task name and description to create a new task.';
-
-  const label = 
-    isEditMode ? 
-      'Edit task' 
-      : 
-      'Add task';
-  
-  const successMessage = 
-    isEditMode ? 
-      'Task edited successfully!' 
-      : 
-      'Task added successfully!' 
 
   useEffect(() => {
     constructFormState();
@@ -73,8 +66,16 @@ const Form = (
     }
 
     setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000)
+    console.log(formState, 'formState');
+    onSubmit({
+      name: formState.name.value,
+      description: formState.description.value,
+    });
 
-    onSubmit;
+    if (handleClose) {
+      handleClose();
+    }
   };
 
   const handleFormValidations = () => {
@@ -103,33 +104,36 @@ const Form = (
   };
 
   return (
-    <Container isEditMode={isEditMode}>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
-      <StyledForm onSubmit={handleSubmit}>
-        {formConfiguration.map((el, idx) => (
-          <InputContainer key={`form-element-${idx}`}>
-            <Label>{el.label}:</Label>
-            <Input
-              type={el.type}
-              value={formState?.[el.stateField]?.value}
-              onChange={(e) => onChangeHandler(el?.stateField, e.target.value)}
-              placeholder={el.placeholder}
-            />
-            {formState?.[el?.stateField]?.error && (
-              <Message type="error" label={formState?.[el?.stateField].error} />
-            )}
-          </InputContainer>
-        ))}
+    <>
+      <Title>{title}</Title>
+      <Container isEditMode={isEditMode}>
+        <Subtitle>
+          {subtitle}
+        </Subtitle>
+        <Form onSubmit={handleSubmit}>
+          {formConfiguration.map((el, idx) => (
+            <InputContainer key={`form-element-${idx}`}>
+              <Label>{el.label}:</Label>
+              <Input
+                type={el.type}
+                value={formState?.[el.stateField]?.value}
+                onChange={(e) => onChangeHandler(el?.stateField, e.target.value)}
+                placeholder={el.placeholder}
+              />
+              {formState?.[el?.stateField]?.error && (
+                <Notification type="error" label={formState?.[el?.stateField].error} />
+              )}
+            </InputContainer>
+          ))}
 
-        <Button type="submit" variant="primary" label={label} />
-        {success && (
-          <Message type="success" label={successMessage} />
-        )}
-      </StyledForm>
-    </Container>
+          <Button type="submit" variant="primary" label={buttonLabel} />
+          {success && (
+            <Notification type="success" label={successMessage} />
+          )}
+        </Form>
+      </Container>
+    </>
   );
 }
 
-export default Form;
+export default TaskForm;

@@ -1,4 +1,4 @@
-import { FormState } from "../components/Form/types";
+import { FormState } from "../components/TaskForm/types";
 import { formConfiguration } from "./formConfiguration";
 
 export const initialFormState: FormState = formConfiguration.reduce((acc, el) => {

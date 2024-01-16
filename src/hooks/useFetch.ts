@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 
-function useFetch<T = unknown>(
-  url: string
-): { data: T | null; loading: boolean; error: Error | null } {
+type FetchMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+
+type FetchResult<T> = { data: T | null; loading: boolean; error: Error | null };
+
+function useFetch<T = unknown, B extends Record<string, unknown> | null = null>(
+  url: string,
+  method: FetchMethod = "GET",
+  body: B = null as B
+): FetchResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -11,13 +17,17 @@ function useFetch<T = unknown>(
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method,
+          body: body ? JSON.stringify(body) : null,
+        });
         if (!response.ok) {
           throw new Error(`Something went wrong: ${response.status}`);
         }
 
-        const result = await response.json();
-        setData(result.localTags);
+        const data = await response.json();
+
+        setData(data.localTags);
       } catch (error) {
         setError(error as Error);
       } finally {
@@ -26,7 +36,7 @@ function useFetch<T = unknown>(
     };
 
     fetchData();
-  }, [url]);
+  }, [url, method, body]);
 
   return { data, loading, error };
 }

@@ -4,8 +4,8 @@ const Message = ({
   label, 
   type,
 }: { 
-  label: string;
-  type: string;
+  label: string | null;
+  type: 'success' | 'error';
 }) => {
   return  (
     <Label type={type}>{label}</Label>

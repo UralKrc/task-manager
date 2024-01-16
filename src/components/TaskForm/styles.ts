@@ -7,10 +7,18 @@ export const Container = styled.div.withConfig({
 }>`
   border: ${({ theme, isEditMode }) => isEditMode ? 'none' : theme.borders.default};
   border-radius: ${({ theme }) => theme.borders.radius};
-  padding: 1rem;
-  margin: 3rem auto;
+  padding: 2rem 1rem;
+  margin: 0 auto 3rem;
   font-family: sans-serif;
-  max-width: 720px;
+  box-shadow: ${({ isEditMode }) => !isEditMode && '0 0 10px rgba(0, 0, 0, 0.5)'};
+`;
+
+export const Title = styled.h2`
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.primary};
+  margin: 3rem 0 1rem;
 `;
 
 export const Subtitle = styled.p`
@@ -18,9 +26,10 @@ export const Subtitle = styled.p`
   margin-bottom: 1.5rem;
   font-weight: bold;
   font-size: 0.825rem;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
-export const StyledForm = styled.form`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;

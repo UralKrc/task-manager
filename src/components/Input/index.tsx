@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import { StyledInput } from "./styles"
 
 const Input = ({
@@ -8,7 +9,7 @@ const Input = ({
 }: {
   value: string,
   type: string,
-  onChange: (newValue: string) => void;
+  onChange: (newValue: ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
 }) => {
   return (

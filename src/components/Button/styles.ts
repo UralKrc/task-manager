@@ -12,6 +12,7 @@ const getButtonStyles = (props: ButtonProps) => {
     background-color: ${theme.buttons[$variant].backgroundColor};
     padding: ${theme.buttons.padding};
     color: ${theme.colors.white};
+    font-size: 1.125rem;
     border: ${theme.borders.default};
     border-radius: ${theme.borders.radius};
     cursor: pointer;

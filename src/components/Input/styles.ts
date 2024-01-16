@@ -6,6 +6,7 @@ export const StyledInput = styled.input`
   padding: ${({ theme }) => theme.input.padding};
   margin: ${({ theme }) => theme.input.margin};
   height: ${({ theme }) => theme.input.height};
+  outline: none;
 
   &:focus {
     border: ${({ theme }) => theme.input.focusBorder};

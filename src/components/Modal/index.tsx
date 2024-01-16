@@ -1,13 +1,20 @@
-import { Backdrop, ButttonWrapper, CloseButton } from './styles';
-import Form from '../Form';
+import { Backdrop, ButttonWrapper, CloseButton, SecondaryAction, Title } from './styles';
+import TaskForm from '../TaskForm';
 import { motion } from 'framer-motion';
+import Button from '../Button';
 
 const Modal = ({ 
   handleClose, 
-  handlePrimaryButtonClick 
+  handleEditButtonClick,
+  handleDeleteButtonClick,
+  isEditMode = false, 
+  secondaryActionTitle,
 } : { 
   handleClose: () => void; 
-  handlePrimaryButtonClick?: () => void;
+  handleEditButtonClick: () => void;
+  handleDeleteButtonClick: () => void;
+  isEditMode?: boolean;
+  secondaryActionTitle: string;
 }) => {
   const dropIn = {
     hidden: {
@@ -43,7 +50,25 @@ const Modal = ({
         <ButttonWrapper>
           <CloseButton onClick={handleClose}>&times;</CloseButton>
         </ButttonWrapper>
-        <Form isEditMode onSubmit={handlePrimaryButtonClick} />
+        {
+          isEditMode ? 
+            <TaskForm 
+              title="Edit Task"
+              subtitle="Please edit the task name or description."
+              buttonLabel="Edit task"
+              successMessage="Task edited successfully!"
+              isEditMode 
+              onSubmit={handleEditButtonClick} 
+              handleClose={handleClose}
+            /> 
+            : 
+            (
+              <SecondaryAction>
+                <Title>{secondaryActionTitle}</Title>
+                <Button variant="secondary" onClick={handleDeleteButtonClick} label="Delete" />
+              </SecondaryAction>
+            )
+        }
       </motion.div>
     </Backdrop>
   );

@@ -6,19 +6,17 @@ export const Backdrop = styled.div`
   width: 100vw;
   top: 0;
   left: 0;
-  background: rgba(0,0,0,0);
-  backdrop-filter: blur(1px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: sans-serif;
 
   .modal {
-    min-height: 30%;
     background-color: #ffffff;
     border-radius: 0.5rem;
     border: 1px solid #000;
-    padding: 1em;
+    padding: 1em 2em;
     box-shadow: 5px 5px 0px 0px rgba(0, 0, 0);
     display: flex;
     flex-direction: column;
@@ -38,4 +36,21 @@ export const CloseButton = styled.a`
   cursor: pointer;
   font-size: 1.5em;
   color: ${({ theme }) => theme.colors.primary};
+`;
+
+
+export const SecondaryAction = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
+
+export const Title = styled.div`
+  color: ${({ theme }) => theme.colors.error};
+  font-weight: bold;
+  margin: 1rem 0;
+  padding: 2rem;
 `;

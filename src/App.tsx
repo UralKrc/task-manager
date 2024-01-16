@@ -1,4 +1,4 @@
-import TagManager from './views/TagManager'
+import TaskManager from './views/TaskManagement'
 import theme from './styles/themes/default';
 import { ThemeProvider } from 'styled-components';
 function App() {
@@ -6,7 +6,7 @@ function App() {
   return (
     <>
     <ThemeProvider theme={theme}>
-      <TagManager />
+      <TaskManager />
     </ThemeProvider>
     </>
   )
