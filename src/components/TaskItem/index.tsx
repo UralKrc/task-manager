@@ -4,21 +4,20 @@ import Button from "../Button";
 import Modal from "../Modal";
 import { Description, TaskInfo, Name, ButtonWrapper, Task } from "./styles";
 import { TaskItem as Type } from "../../views/TaskManagement/types";
+import { useTasks } from "../../hooks/useTasks";
 
 const TaskItem = ({
   task,
-  handleEditButtonClick,
-  handleDeleteButtonClick
 }:
 {
   task: Type;
-  handleEditButtonClick: (tasks: Type[], id: number, updatedTask: Type) => void;
-  handleDeleteButtonClick: (id: number) => void;
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
 
   const { id, name, description } = task;
+  const { deleteTask } = useTasks();
+  
 
   const showModalByStatus = (status: string) => {
     setShowModal(true);
@@ -51,8 +50,8 @@ const TaskItem = ({
           isEditMode={isEditMode}
           secondaryActionTitle="Are you sure you want to delete this task?"
           handleClose={() => setShowModal(false)} 
-          handleEditButtonClick={() => handleEditButtonClick(id, task)} 
-          handleDeleteButtonClick={() => handleDeleteButtonClick(id)} 
+          handleSecondaryButtonClick={() => { deleteTask(id); setShowModal(false); }}
+          taskId={id}
         />
       }
       </AnimatePresence>

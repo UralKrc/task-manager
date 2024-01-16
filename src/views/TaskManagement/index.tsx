@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { addTask, deleteTask, editTask } from "../../helpers/taskManagement";
-import { TaskItem } from "./types";
+import { useEffect } from "react";
 import TaskList from "../../components/TaskList";
 import TaskForm from "../../components/TaskForm";
 import useFetch from "../../hooks/useFetch";
 import Loader from "../../components/Loader";
 import Notification from "../../components/Notification";
 import { Container, ErrorContainer, Subtitle, Title } from "./styles";
+import { TaskItem } from "./types";
+import { useTasks } from "../../hooks/useTasks";
 
 const TaskManagement = () => {
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
   const URL = 'https://mocki.io/v1/0d06cad8-e233-459c-badf-54f8c1026cc7';
 
   const {
@@ -18,23 +17,13 @@ const TaskManagement = () => {
     error,
   } = useFetch<TaskItem[]>(URL)
 
+  const { addTask } = useTasks();
+
   useEffect(() => {
     if (data) {
-      setTasks(data);
+      data.forEach(task => addTask(task));
     }
   }, [data]);
-
-  const handleAdd = (newTask: TaskItem) => {
-    setTasks(addTask(tasks, newTask));
-  };
-
-  const handleDelete = (id: number) => {
-    setTasks(deleteTask(tasks, id));
-  };
-
-  const handleEdit = (id: number, updatedTask: TaskItem) => {
-    setTasks(editTask(tasks, id, updatedTask));
-  };
 
   return (
     <Container>
@@ -58,13 +47,8 @@ const TaskManagement = () => {
                     subtitle="Please enter the task name and description to create a new task."
                     buttonLabel="Add task"
                     successMessage="Task added successfully!"
-                    onSubmit={handleAdd} 
                   />
-                  <TaskList
-                    tasks={tasks} 
-                    handleDeleteTask={handleDelete} 
-                    handleEditTask={handleEdit} 
-                  />
+                  <TaskList />
                 </>
               )
             }

@@ -5,14 +5,14 @@ import Button from '../Button';
 
 const Modal = ({ 
   handleClose, 
-  handleEditButtonClick,
-  handleDeleteButtonClick,
+  taskId,
+  handleSecondaryButtonClick,
   isEditMode = false, 
   secondaryActionTitle,
 } : { 
   handleClose: () => void; 
-  handleEditButtonClick: () => void;
-  handleDeleteButtonClick: () => void;
+  taskId: number;
+  handleSecondaryButtonClick: () => void;
   isEditMode?: boolean;
   secondaryActionTitle: string;
 }) => {
@@ -58,14 +58,14 @@ const Modal = ({
               buttonLabel="Edit task"
               successMessage="Task edited successfully!"
               isEditMode 
-              onSubmit={handleEditButtonClick} 
+              taskId={taskId}
               handleClose={handleClose}
             /> 
             : 
             (
               <SecondaryAction>
                 <Title>{secondaryActionTitle}</Title>
-                <Button variant="secondary" onClick={handleDeleteButtonClick} label="Delete" />
+                <Button variant="secondary" onClick={handleSecondaryButtonClick} label="Delete" />
               </SecondaryAction>
             )
         }

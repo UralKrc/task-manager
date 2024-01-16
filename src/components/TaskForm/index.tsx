@@ -6,11 +6,11 @@ import Input from '../Input';
 import Notification from '../Notification';
 import { initialFormState } from '../../helpers/initialFormState';
 import { FormState } from './types';
-import { TaskItem } from '../../views/TaskManagement/types';
+import { useTasks } from '../../hooks/useTasks';
 
 const TaskForm = (
   { 
-    onSubmit, 
+    taskId, 
     isEditMode = false,
     title,
     subtitle,
@@ -23,10 +23,11 @@ const TaskForm = (
     subtitle: string;
     buttonLabel: string; 
     successMessage: string;
-    onSubmit: (task: TaskItem, id?: number) => void;
+    taskId?: number;
     isEditMode?: boolean;
     handleClose?: () => void,
   }) => {
+  const { addTask, editTask } = useTasks();
   const [formState, setFormState] = useState(initialFormState);
   const [success, setSuccess] = useState(false);
 
@@ -67,11 +68,26 @@ const TaskForm = (
 
     setSuccess(true);
     setTimeout(() => setSuccess(false), 2000)
-    console.log(formState, 'formState');
-    onSubmit({
-      name: formState.name.value,
-      description: formState.description.value,
-    });
+
+    if (isEditMode && taskId !== undefined) {
+      editTask(taskId,{
+        id: taskId,
+        name: formState.name.value,
+        description: formState.description.value,
+      });
+    } else {
+      addTask({
+        id: Date.now(),
+        name: formState.name.value,
+        description: formState.description.value,
+      });
+
+      setFormState({
+        ...formState,
+        name: { ...formState.name, value: '' },
+        description: { ...formState.description, value: '' },
+      });
+    }
 
     if (handleClose) {
       handleClose();
