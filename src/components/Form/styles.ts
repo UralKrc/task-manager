@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  border: ${({ theme }) => theme.borders.default};
+export const Container = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isEditMode'].includes(prop),
+})<{
+  isEditMode?: boolean;
+}>`
+  border: ${({ theme, isEditMode }) => isEditMode ? 'none' : theme.borders.default};
   border-radius: ${({ theme }) => theme.borders.radius};
   padding: 1rem;
   margin: 3rem auto;

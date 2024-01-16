@@ -4,13 +4,14 @@ import Tasks from "../../components/Tasks";
 import Form from "../../components/Form";
 import useFetch from "../../hooks/useFetch";
 import Loader from "../../components/Loader";
-import ErrorMessage from "../../components/ErrorMessage";
-import { TaskItem } from "../../constants/types";
 import { addTask, deleteTask, editTask } from "../../helpers/taskManagement";
+import { TaskItem } from "./types";
+import Message from "../../components/Message";
 
 const TagManager = () => {
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const URL = 'https://mocki.io/v1/0d06cad8-e233-459c-badf-54f8c1026cc7';
+
   const {
     data,
     loading,
@@ -24,38 +25,36 @@ const TagManager = () => {
   }, [data]);
 
   const handleAdd = (newTask: TaskItem) => {
-    setTasks(addTask(data, newTask));
+    setTasks(addTask(tasks, newTask));
   };
 
-  const handleDelete = (index: number) => {
-    setTasks(deleteTask(data, index));
+  const handleDelete = (id: number) => {
+    setTasks(deleteTask(tasks, id));
   };
 
-  const handleEdit = (index: number, updatedTask: TaskItem) => {
-    setTasks(editTask(data, index, updatedTask));
+  const handleEdit = (id: number, updatedTask: TaskItem) => {
+    setTasks(editTask(tasks, id, updatedTask));
   };
 
-console.log(tasks, 1);
+
   return (
     <Container>
       {
         error ? (
           <ErrorContainer>
-            <ErrorMessage label="Unexpected error. Please reload the page." />
+            <Message type="error" label="Unexpected error. Please reload the page." />
           </ErrorContainer>
         ) : (
           <>
             {
               loading ? 
-              (
                 <Loader />
-              )
                 : 
               (
                 <>
                   <Title>Welcome to Task Manager</Title>
                   <Subtitle>You can add, edit or delete task.</Subtitle>
-                  <Form  addTask={handleAdd} />
+                  <Form onSubmit={handleAdd} />
                   <Tasks tasks={tasks} deleteTask={handleDelete} editTask={handleEdit} />
                 </>
               )

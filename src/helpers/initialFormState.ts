@@ -1,5 +1,5 @@
+import { FormState } from "../components/Form/types";
 import { formConfiguration } from "./formConfiguration";
-import { FormState } from "../constants/types";
 
 export const initialFormState: FormState = formConfiguration.reduce((acc, el) => {
   acc[el.stateField] = {

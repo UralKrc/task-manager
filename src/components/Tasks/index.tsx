@@ -1,6 +1,9 @@
-import { TaskItem } from "../../constants/types";
+import { useState } from "react";
+import { TaskItem } from "../../views/TagManager/types";
 import Button from "../Button";
+import Modal from "../Modal";
 import { Description, Name, Task, TaskList, ButtonWrapper, Title, Container } from "./styles";
+import { AnimatePresence } from "framer-motion";
 
 const Tasks = ({
   tasks,
@@ -12,6 +15,13 @@ const Tasks = ({
   editTask: (item: number) => void;
   deleteTask: (item: number) => void;
 }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handlePrimaryButtonClick = (id: number) => {
+    editTask(id);
+    setShowModal(false);
+  }
+  console.log(tasks);
   return (
    <TaskList>
      <Title>Task List</Title>
@@ -21,9 +31,16 @@ const Tasks = ({
             <Name>{task.name}</Name>
             <Description>{task.description}</Description>
             <ButtonWrapper>
-              <Button variant="primary" onClick={() => editTask(index)} label="Edit" />
-              <Button variant="secondary" onClick={() => deleteTask(index)} label="Delete" />
+              <Button variant="primary" onClick={() => setShowModal(true)} label="Edit" />
+              <Button variant="secondary" onClick={() => deleteTask(task.id)} label="Delete" />
             </ButtonWrapper>
+            <AnimatePresence
+                initial={false}
+                mode="wait"
+                onExitComplete={() => null}
+              >
+              {showModal && <Modal handleClose={() => setShowModal(false)} handlePrimaryButtonClick={() => handlePrimaryButtonClick(task.id)} />}
+            </AnimatePresence>
           </Task>
         ))}
       </Container>
