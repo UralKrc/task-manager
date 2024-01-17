@@ -1,25 +1,22 @@
-import StyledButton from "./styles";
+import React from 'react';
+import { StyledButton } from './styles';
 
-const Button = ({
-  variant,
-  onClick,
-  label,
+const Button = ({ 
+  variant, 
   type,
+  onClick, 
+  children 
 }: {
-  variant: 'primary' | 'secondary',
+  variant: 'primary' | 'secondary';
+  type?: 'button' | 'submit';
   onClick?: () => void;
-  label: React.ReactNode;
-  type?: 'button' | 'submit',
-}) => {
+  children: React.ReactNode;
+}): React.ReactElement => {
   return (
-   <StyledButton 
-      type={type} 
-      $variant={variant} 
-      onClick={onClick}
-    >
-      {label}
+    <StyledButton type={type} variant={variant} onClick={onClick}>
+      {children}
     </StyledButton>
-  )
-}
+  );
+};
 
 export default Button;

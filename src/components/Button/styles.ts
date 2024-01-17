@@ -1,15 +1,15 @@
 import { ButtonHTMLAttributes } from 'react';
-import styled, { DefaultTheme, withTheme } from 'styled-components';
+import styled, { DefaultTheme } from 'styled-components';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  $variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary';
   theme: DefaultTheme;
 }
 
 const getButtonStyles = (props: ButtonProps) => {
-  const { theme, $variant = 'primary' } = props;
+  const { theme, variant = 'primary' } = props;
   return `
-    background-color: ${theme.buttons[$variant].backgroundColor};
+    background-color: ${theme.buttons[variant].backgroundColor};
     padding: ${theme.buttons.padding};
     color: ${theme.colors.white};
     font-size: 1.125rem;
@@ -19,13 +19,15 @@ const getButtonStyles = (props: ButtonProps) => {
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: ${theme.buttons[$variant].hoverBackgroundColor};
+      background-color: ${theme.buttons[variant].hoverBackgroundColor};
     }
   `;
 };
 
-const StyledButton = styled.button<ButtonProps>`
+export const StyledButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['variant'].includes(prop),
+})<{
+  variant?: 'primary' | 'secondary';
+}>`
   ${(props) => getButtonStyles(props)}
 `;
-
-export default withTheme(StyledButton);

@@ -65,7 +65,7 @@ const Modal = ({
             (
               <SecondaryAction>
                 <Title>{secondaryActionTitle}</Title>
-                <Button variant="secondary" onClick={handleSecondaryButtonClick} label="Delete" />
+                <Button variant="secondary" onClick={handleSecondaryButtonClick}>Delete</Button>
               </SecondaryAction>
             )
         }

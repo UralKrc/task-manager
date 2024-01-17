@@ -36,8 +36,8 @@ const TaskItem = ({
           <Description><b>Description:</b> {description}</Description>
         </TaskInfo>
         <ButtonWrapper>
-          <Button variant="primary" onClick={() => showModalByStatus('edit')} label="Edit" />
-          <Button variant="secondary" onClick={() => showModalByStatus('delete')} label="Delete" />
+          <Button variant="primary" onClick={() => showModalByStatus('edit')}>Edit</Button>
+          <Button variant="secondary" onClick={() => showModalByStatus('delete')}>Delete</Button>
         </ButtonWrapper>
       </Task>
       <AnimatePresence

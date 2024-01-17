@@ -142,7 +142,7 @@ const TaskForm = (
             </InputContainer>
           ))}
 
-          <Button type="submit" variant="primary" label={buttonLabel} />
+          <Button type="submit" variant="primary">{buttonLabel}</Button>
           {success && (
             <Notification type="success" label={successMessage} />
           )}
