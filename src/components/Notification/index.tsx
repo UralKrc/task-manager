@@ -1,6 +1,6 @@
-import { Label } from "./styles";
+import { StyledNotification } from "./styles";
 
-const Message = ({ 
+const Notification = ({ 
   label, 
   type,
 }: { 
@@ -8,8 +8,8 @@ const Message = ({
   type: 'success' | 'error';
 }) => {
   return  (
-    <Label type={type}>{label}</Label>
+    <StyledNotification type={type}>{label}</StyledNotification>
   )
 }
 
-export default Message;
+export default Notification;

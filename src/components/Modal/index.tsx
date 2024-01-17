@@ -1,4 +1,5 @@
-import { Backdrop, ButttonWrapper, CloseButton, SecondaryAction, Title } from './styles';
+import { Backdrop, ButttonWrapper, SecondaryAction, Title } from './styles';
+import closeIcon from '../../assets/close.svg';
 import TaskForm from '../TaskForm';
 import { motion } from 'framer-motion';
 import Button from '../Button';
@@ -48,7 +49,7 @@ const Modal = ({
         className="modal"
       >
         <ButttonWrapper>
-          <CloseButton onClick={handleClose}>&times;</CloseButton>
+          <img src={closeIcon} onClick={handleClose} />
         </ButttonWrapper>
         {
           isEditMode ? 

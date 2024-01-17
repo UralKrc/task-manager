@@ -1,13 +1,7 @@
 import React, { createContext, useReducer } from 'react';
 import { addTask, deleteTask, editTask } from '../helpers/taskManagement';
 import { TaskItem as Task } from '../views/TaskManagement/types';
-
-interface TaskContextProps {
-  tasks: Task[];
-  addTask: (task: Task) => void;
-  deleteTask: (id: number) => void;
-  editTask: (id: number, updatedTask: Task) => void;
-}
+import { TaskContextProps } from './types';
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 

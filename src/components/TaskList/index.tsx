@@ -12,6 +12,7 @@ const TaskList = () => {
           <Container>
             {tasks.map((task: Task) => (
               <TaskItem
+              key={task.id}
                 task={task}
               />
             ))}

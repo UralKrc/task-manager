@@ -20,11 +20,7 @@ export const Spinner = styled.div`
   width: 28px;
 `;
 
-export const StyledLoader = styled.div.withConfig({
-  shouldForwardProp: (prop) => !['position'].includes(prop),
-})<{
-  position?: CSSStyleDeclaration['position'];
-}>`
+export const StyledLoader = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
@@ -33,7 +29,7 @@ export const StyledLoader = styled.div.withConfig({
   margin: 0 auto;
 
   ${Spinner} {
-    position: ${({ position = 'absolute' }) => position};
+    position: absolute;
     left: 0;
     right: 0;
     top: 0;

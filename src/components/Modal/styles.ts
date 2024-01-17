@@ -32,13 +32,6 @@ export const ButttonWrapper = styled.div`
   align-items: center;
 `;
 
-export const CloseButton = styled.a`
-  cursor: pointer;
-  font-size: 1.5em;
-  color: ${({ theme }) => theme.colors.primary};
-`;
-
-
 export const SecondaryAction = styled.div`
   display: flex;
   flex-direction: column;

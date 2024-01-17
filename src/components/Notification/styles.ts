@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Label = styled.p.withConfig({
+export const StyledNotification = styled.p.withConfig({
   shouldForwardProp: (prop) => !['type'].includes(prop),
 })<{
   type?: 'success' | 'error';

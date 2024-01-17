@@ -5,10 +5,10 @@ const Button = ({
   variant, 
   type,
   onClick, 
-  children 
+  children, 
 }: {
   variant: 'primary' | 'secondary';
-  type?: 'button' | 'submit';
+  type?: 'button' | 'submit' | 'reset' | undefined;
   onClick?: () => void;
   children: React.ReactNode;
 }): React.ReactElement => {

@@ -8,7 +8,7 @@ import { Container, ErrorContainer, Subtitle, Title } from "./styles";
 import { TaskItem } from "./types";
 import { useTasks } from "../../hooks/useTasks";
 
-const TaskManagement = () => {
+const TaskManager = () => {
   const URL = 'https://mocki.io/v1/0d06cad8-e233-459c-badf-54f8c1026cc7';
 
   const {
@@ -59,4 +59,4 @@ const TaskManagement = () => {
   );
 };
 
-export default TaskManagement;
+export default TaskManager;
