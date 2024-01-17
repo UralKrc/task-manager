@@ -1,10 +1,4 @@
-export type FormField = {
-  type: string;
-  label: string;
-  stateField: string;
-  stateDefault: string;
-  placeholder: string;
-};
+import { FormField } from "./types";
 
 export const formConfiguration: FormField[] = [
   {

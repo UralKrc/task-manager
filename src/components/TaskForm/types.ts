@@ -5,3 +5,10 @@ export type FormState = {
   };
 };
 
+export type FormField = {
+  type: string;
+  label: string;
+  stateField: string;
+  stateDefault: string;
+  placeholder: string;
+};

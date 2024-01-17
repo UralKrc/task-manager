@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { formConfiguration } from '../../helpers/formConfiguration';
+import { formConfiguration } from './constants';
 import Button from '../Button';
 import { Container, InputContainer, Label, Form, Subtitle, Title } from './styles';
 import Input from '../Input';
