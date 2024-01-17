@@ -9,7 +9,7 @@ import { TaskItem } from "./types";
 import { useTasks } from "../../hooks/useTasks";
 
 const TaskManager = () => {
-  const URL = 'https://mocki.io/v1/0d06cad8-e233-459c-badf-54f8c1026cc7';
+  const URL = 'https://mocki.io/v1/7bb16676-2943-4982-83a6-09c3169c0fd4';
 
   const {
     data,

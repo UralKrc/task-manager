@@ -1,5 +1,5 @@
 import { Backdrop, ButttonWrapper, SecondaryAction, Title } from './styles';
-import closeIcon from '../../assets/close.svg';
+import closeIcon from '../../assets/close-icon.svg';
 import TaskForm from '../TaskForm';
 import { motion } from 'framer-motion';
 import Button from '../Button';

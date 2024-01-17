@@ -27,7 +27,7 @@ function useFetch<T = unknown, B extends Record<string, unknown> | null = null>(
 
         const data = await response.json();
 
-        setData(data.localTags);
+        setData(data);
       } catch (error) {
         setError(error as Error);
       } finally {

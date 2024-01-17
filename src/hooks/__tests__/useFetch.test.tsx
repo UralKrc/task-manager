@@ -12,7 +12,7 @@ describe("useFetch", () => {
   });
 
 it("fetches data successfully", async () => {
-  const mockSuccessResponse = { localTags: { message: "Success" } };
+  const mockSuccessResponse = { message: "Success" };
   global.fetch = jest.fn().mockImplementationOnce(() =>
     Promise.resolve({
       ok: true,
