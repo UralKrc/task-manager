@@ -1,44 +1,96 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TaskForm from '../index';
+import TaskForm from '..';
 import { ThemeProvider } from 'styled-components';
 import theme from '../../../styles/themes/default';
-import TaskContext from '../../../contexts/TaskContext';
-import { useTasks } from '../../../hooks/useTasks';
+import { useSupabase } from '../../../hooks/useSupabase';
+import { TaskProvider } from '../../../contexts/TaskContext';
+import { act } from 'react-dom/test-utils';
 
-jest.mock('../../../hooks/useTasks');
+jest.mock('../../../hooks/useSupabase');
 
 describe('TaskForm', () => {
-  test('renders TaskForm with form fields and button', () => {
-    const mockTask = { id: 1, name: 'Test Task', description: 'Test Description' };
-    const addTask = jest.fn();
-    const deleteTask = jest.fn();
-    const editTask = jest.fn();
+  beforeEach(() => {
+    (useSupabase as jest.Mock).mockReturnValue({
+      addData: jest.fn(),
+      editData: jest.fn(),
+      error: null,
+      // Add other properties returned by useSupabase if needed
+    });
+  });
 
-    const value = {
-      tasks: [mockTask],
-      addTask,
-      deleteTask,
-      editTask,
-    };
-
-    (useTasks as jest.Mock).mockReturnValue(value);
-
+  it('renders form', () => {
     render(
       <ThemeProvider theme={theme}>
-        <TaskContext.Provider value={value}>
-          <TaskForm 
-            title="Test Title"
+        <TaskProvider>
+          <TaskForm
+            title="Test Form"
             subtitle="Test Subtitle"
-            buttonLabel="Test Button"
-            successMessage="Success"
+            buttonLabel="Submit"
+            successMessage="Success!"
           />
-        </TaskContext.Provider>
+        </TaskProvider>
       </ThemeProvider>
     );
 
-    expect(screen.getByText('Test Title')).toBeInTheDocument();
+    expect(screen.getByText('Test Form')).toBeInTheDocument();
     expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Test Button' })).toBeInTheDocument();
+    expect(screen.getByText('Submit')).toBeInTheDocument();
+  });
+
+  it('updates form fields on change', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <TaskProvider>
+          <TaskForm
+            title="Test Form"
+            subtitle="Test Subtitle"
+            buttonLabel="Submit"
+            successMessage="Success!"
+          />
+        </TaskProvider>
+      </ThemeProvider>
+    );
+
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText('Example Name'), { target: { value: 'Test Name' } });
+      fireEvent.change(screen.getByPlaceholderText('Example Description'), { target: { value: 'Test Description' } });
+    });
+
+    expect(screen.getByPlaceholderText('Example Name')).toHaveValue('Test Name');
+    expect(screen.getByPlaceholderText('Example Description')).toHaveValue('Test Description');
+  });
+
+  it('submits form on submit button click', async () => {
+    const addDataMock = jest.fn();
+    (useSupabase as jest.Mock).mockReturnValue({
+      addData: addDataMock,
+      editData: jest.fn(),
+      error: null,
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <TaskProvider>
+          <TaskForm
+            title="Test Form"
+            subtitle="Test Subtitle"
+            buttonLabel="Submit"
+            successMessage="Success!"
+          />
+        </TaskProvider>
+      </ThemeProvider>
+    );
+
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText('Example Name'), { target: { value: 'Test Name' } });
+      fireEvent.change(screen.getByPlaceholderText('Example Description'), { target: { value: 'Test Description' } });
+      fireEvent.click(screen.getByText('Submit'));
+    });
+
+    expect(addDataMock).toHaveBeenCalledWith({
+      name: 'Test Name',
+      description: 'Test Description',
+    });
   });
 });

@@ -1,35 +1,42 @@
-import { useEffect, useState } from 'react';
-import { formConfiguration } from './constants';
-import Button from '../Button';
-import { Container, InputContainer, Label, Form, Subtitle, Title } from './styles';
-import Input from '../Input';
-import Notification from '../Notification';
-import { initialFormState } from '../../helpers/initialFormState';
-import { FormState } from './types';
-import { useTasks } from '../../hooks/useTasks';
+import { useEffect, useState } from "react";
+import { formConfiguration } from "./constants";
+import { initialFormState } from "../../helpers/initialFormState";
+import { FormState } from "./types";
+import Button from "../Button";
+import Input from "../Input";
+import Notification from "../Notification";
+import {
+  Container,
+  InputContainer,
+  Label,
+  Form,
+  Subtitle,
+  Title,
+} from "./styles";
 
-const TaskForm = (
-  { 
-    taskId, 
-    isEditMode = false,
-    title,
-    subtitle,
-    buttonLabel,
-    successMessage,
-    handleClose,
-  } : 
-  { 
-    title: string;
-    subtitle: string;
-    buttonLabel: string; 
-    successMessage: string;
-    taskId?: number;
-    isEditMode?: boolean;
-    handleClose?: () => void,
-  }) => {
-  const { addTask, editTask } = useTasks();
+import { useSupabase } from "../../hooks/useSupabase";
+
+const TaskForm = ({
+  taskId,
+  isEditMode = false,
+  title,
+  subtitle,
+  buttonLabel,
+  successMessage,
+  handleClose,
+}: {
+  title: string;
+  subtitle: string;
+  buttonLabel: string;
+  successMessage: string;
+  taskId?: number;
+  isEditMode?: boolean;
+  handleClose?: () => void;
+}) => {
   const [formState, setFormState] = useState(initialFormState);
   const [success, setSuccess] = useState(false);
+
+  const { addData: addTask, editData: editTask, error } = useSupabase("tasks");
 
   useEffect(() => {
     constructFormState();
@@ -37,6 +44,7 @@ const TaskForm = (
 
   const constructFormState = () => {
     const preparedObj: FormState = {};
+
     formConfiguration.forEach((el) => {
       preparedObj[el.stateField] = {
         value: el.stateDefault,
@@ -57,7 +65,7 @@ const TaskForm = (
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const hasErrors = handleFormValidations();
 
@@ -66,28 +74,37 @@ const TaskForm = (
       return;
     }
 
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 2000)
-
     if (isEditMode && taskId !== undefined) {
-      editTask(taskId,{
+      await editTask(taskId, {
         id: taskId,
         name: formState.name.value,
         description: formState.description.value,
       });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
     } else {
-      addTask({
-        id: Date.now(),
+      await addTask({
         name: formState.name.value,
         description: formState.description.value,
       });
 
+      if (error) {
+        console.error(error);
+        return;
+      }
+
       setFormState({
         ...formState,
-        name: { ...formState.name, value: '' },
-        description: { ...formState.description, value: '' },
+        name: { ...formState.name, value: "" },
+        description: { ...formState.description, value: "" },
       });
     }
+
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000);
 
     if (handleClose) {
       handleClose();
@@ -98,16 +115,15 @@ const TaskForm = (
     const updatedState = { ...formState };
     let error = false;
 
-    const { name, description } =
-      updatedState;
+    const { name, description } = updatedState;
     if (name.value?.length < 3) {
-      updatedState.name.error =
-        'Name cannot be less than 3 characters.';
+      updatedState.name.error = "Name cannot be less than 3 characters.";
       error = true;
     }
+    
     if (description.value?.length < 3) {
       updatedState.description.error =
-        'Description cannot be less than 3 characters.';
+        "Description cannot be less than 3 characters.";
       error = true;
     }
 
@@ -123,9 +139,7 @@ const TaskForm = (
     <>
       <Title>{title}</Title>
       <Container isEditMode={isEditMode}>
-        <Subtitle>
-          {subtitle}
-        </Subtitle>
+        <Subtitle>{subtitle}</Subtitle>
         <Form onSubmit={handleSubmit}>
           {formConfiguration.map((el, idx) => (
             <InputContainer key={`form-element-${idx}`}>
@@ -133,23 +147,28 @@ const TaskForm = (
               <Input
                 type={el.type}
                 value={formState?.[el.stateField]?.value}
-                onChange={(e) => onChangeHandler(el?.stateField, e.target.value)}
+                onChange={(e) =>
+                  onChangeHandler(el?.stateField, e.target.value)
+                }
                 placeholder={el.placeholder}
               />
               {formState?.[el?.stateField]?.error && (
-                <Notification type="error" label={formState?.[el?.stateField].error} />
+                <Notification
+                  type="error"
+                  label={formState?.[el?.stateField].error}
+                />
               )}
             </InputContainer>
           ))}
 
-          <Button type="submit" variant="primary">{buttonLabel}</Button>
-          {success && (
-            <Notification type="success" label={successMessage} />
-          )}
+          <Button type="submit" variant="primary">
+            {buttonLabel}
+          </Button>
+          {success && <Notification type="success" label={successMessage} />}
         </Form>
       </Container>
     </>
   );
-}
+};
 
 export default TaskForm;

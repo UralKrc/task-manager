@@ -2,7 +2,7 @@ import { StyledLoader, Spinner } from './styles';
 
 const Loader = () => {
   return (
-    <StyledLoader>
+    <StyledLoader data-testid="loader">
       <Spinner />
     </StyledLoader>
   );

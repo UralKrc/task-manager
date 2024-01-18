@@ -1,46 +1,32 @@
-import { render, fireEvent } from '@testing-library/react';
-import { TaskItem } from '../../views/TaskManagement/types';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
+import { useContext, useEffect } from 'react';
 import TaskContext, { TaskProvider } from '../TaskContext';
+import { TaskItemType } from '../../views/TaskManagement/types';
 
 describe('TaskProvider', () => {
-  it('should add, edit, and delete a task', () => {
-    const { getByTestId } = render(
+  it('updates tasks when setTasks is called', () => {
+    const TestComponent = () => {
+      const context = useContext(TaskContext);
+      const { tasks, setTasks } = context || { tasks: [], setTasks: () => {} };
+      const newTasks: TaskItemType[] = [{ id: 1, name: 'Test Task', description: 'Test Description' }];
+    
+      useEffect(() => {
+        if (tasks.length === 0) {
+          setTasks(newTasks);
+        }
+      }, [tasks, setTasks]);
+    
+      return <div>{tasks.length > 0 ? tasks[0].name : 'No tasks'}</div>;
+    };
+
+    render(
       <TaskProvider>
-        <TaskContext.Consumer>
-          {(context) => (
-            <div>
-              <button
-                data-testid="add-task"
-                onClick={() => context?.addTask({ id: 1, name: 'Test Task' } as TaskItem)}
-              >
-                Add Task
-              </button>
-              <button
-                data-testid="edit-task"
-                onClick={() => context?.editTask(1, { id: 1, name: 'Updated Task' } as TaskItem)}
-              >
-                Edit Task
-              </button>
-              <button
-                data-testid="delete-task"
-                onClick={() => context?.deleteTask(1)}
-              >
-                Delete Task
-              </button>
-              <div data-testid="tasks">{JSON.stringify(context?.tasks)}</div>
-            </div>
-          )}
-        </TaskContext.Consumer>
+        <TestComponent />
       </TaskProvider>
     );
 
-    fireEvent.click(getByTestId('add-task'));
-    expect(getByTestId('tasks').textContent).toBe(JSON.stringify([{ id: 1, name: 'Test Task' }]));
-
-    fireEvent.click(getByTestId('edit-task'));
-    expect(getByTestId('tasks').textContent).toBe(JSON.stringify([{ id: 1, name: 'Updated Task' }]));
-
-    fireEvent.click(getByTestId('delete-task'));
-    expect(getByTestId('tasks').textContent).toBe(JSON.stringify([]));
+    expect(screen.getByText('Test Task')).toBeInTheDocument();
   });
 });

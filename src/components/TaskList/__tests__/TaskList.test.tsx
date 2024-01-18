@@ -1,27 +1,34 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TaskList from '../index';
-import TaskContext from '../../../contexts/TaskContext';
+import { TaskItemType } from '../../../views/TaskManagement/types';
+import TaskList from '..';
 import { ThemeProvider } from 'styled-components';
 import theme from '../../../styles/themes/default';
+import { TaskProvider } from '../../../contexts/TaskContext';
+import { useTasks } from '../../../hooks/useTasks';
+
+jest.mock('../../../hooks/useTasks');
 
 describe('TaskList', () => {
-  test('renders TaskList with tasks', () => {
-    const mockTasks = {
-      tasks: [{ id: 1, name: 'Test Task', description: 'Test Description' }],
-      addTask: jest.fn(),
-      deleteTask: jest.fn(),
-      editTask: jest.fn(),
-    };
-  
+  it('renders tasks', () => {
+    const mockTasks: TaskItemType[] = [
+      { id: 1, name: 'Test Task 1', description: 'Test Description 1' },
+      { id: 2, name: 'Test Task 2', description: 'Test Description 2' },
+    ];
+
+    (useTasks as jest.Mock).mockReturnValue({
+      tasks: mockTasks,
+    });
+
     render(
       <ThemeProvider theme={theme}>
-        <TaskContext.Provider value={mockTasks}>
+        <TaskProvider>
           <TaskList />
-        </TaskContext.Provider>
+        </TaskProvider>
       </ThemeProvider>
     );
-  
-    expect(screen.getByText('Test Task')).toBeInTheDocument();
+
+    expect(screen.getByText('Test Task 1')).toBeInTheDocument();
+    expect(screen.getByText('Test Task 2')).toBeInTheDocument();
   });
 });

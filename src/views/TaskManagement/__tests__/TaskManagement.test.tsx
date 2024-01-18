@@ -1,36 +1,64 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TaskManager from '..';
-import useFetch from '../../../hooks/useFetch';
+import TaskManager from '../index';
+import { useSupabase } from '../../../hooks/useSupabase';
 import { ThemeProvider } from 'styled-components';
 import theme from '../../../styles/themes/default';
-import TaskContext from '../../../contexts/TaskContext';
+import { TaskProvider } from '../../../contexts/TaskContext';
 
-jest.mock('../../../hooks/useFetch');
+jest.mock('../../../hooks/useSupabase');
 
-test('renders TaskManager with fetched data', async () => {
-  (useFetch as jest.Mock).mockReturnValue({
-    data: [{ id: '1', name: 'Welcome to Task Manager', description: 'Test Description' }],
-    loading: false,
-    error: null,
+describe('TaskManager', () => {
+  beforeEach(() => {
+    (useSupabase as jest.Mock).mockReturnValue({
+      getData: jest.fn(),
+      loading: false,
+      error: null,
+    });
   });
 
-  const mockTasks = {
-    tasks: [],
-    addTask: jest.fn(),
-    deleteTask: jest.fn(),
-    editTask: jest.fn(),
-  };
-
-  render(
-    <ThemeProvider theme={theme}>
-      <TaskContext.Provider value={mockTasks}>
-        <TaskManager />
-      </TaskContext.Provider>
-    </ThemeProvider>
-  );
-
-  await waitFor(() => {
+  it('renders without crashing', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <TaskProvider>
+          <TaskManager />
+        </TaskProvider>
+      </ThemeProvider>
+    );
     expect(screen.getByText('Welcome to Task Manager')).toBeInTheDocument();
+  });
+  
+  it('shows loading state', () => {
+    (useSupabase as jest.Mock).mockReturnValue({
+      getData: jest.fn(),
+      loading: true,
+      error: null,
+    });
+  
+    render(
+      <ThemeProvider theme={theme}>
+        <TaskProvider>
+          <TaskManager />
+        </TaskProvider>
+      </ThemeProvider>
+    );
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
+  });
+
+  it('shows error state', () => {
+    (useSupabase as jest.Mock).mockReturnValue({
+      getData: jest.fn(),
+      loading: false,
+      error: 'Unexpected error. Please reload the page.',
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <TaskProvider>
+          <TaskManager />
+        </TaskProvider>
+      </ThemeProvider>
+    );
+    expect(screen.getByText('Unexpected error. Please reload the page.')).toBeInTheDocument();
   });
 });
