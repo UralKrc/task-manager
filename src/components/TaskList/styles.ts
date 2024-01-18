@@ -4,6 +4,19 @@ export const Tasks = styled.div`
   font-family: sans-serif;
 `;
 
+export const EmptyState = styled.div`
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const EmptyStateText = styled.div`
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
 export const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr;
