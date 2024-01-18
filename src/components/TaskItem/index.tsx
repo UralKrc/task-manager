@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { TaskItemType } from "../../views/TaskManagement/types";
+import { TaskItemType } from "../../views/TaskManager/types";
 import Button from "../Button";
 import Modal from "../Modal";
 import { Description, TaskInfo, Name, ButtonWrapper, Task } from "./styles";

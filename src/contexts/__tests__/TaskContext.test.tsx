@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import { useContext, useEffect } from 'react';
 import TaskContext, { TaskProvider } from '../TaskContext';
-import { TaskItemType } from '../../views/TaskManagement/types';
+import { TaskItemType } from '../../views/TaskManager/types';
 
 describe('TaskProvider', () => {
   it('updates tasks when setTasks is called', () => {

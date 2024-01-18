@@ -1,4 +1,4 @@
-import TaskManager from './views/TaskManagement'
+import TaskManager from './views/TaskManager'
 import theme from './styles/themes/default';
 import { ThemeProvider } from 'styled-components';
 import { TaskProvider } from './contexts/TaskContext';

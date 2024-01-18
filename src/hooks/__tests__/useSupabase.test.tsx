@@ -1,86 +1,72 @@
-import { useCallback, useState } from "react";
-import { useTasks } from "../useTasks";
-import { TaskItemType } from "../../views/TaskManagement/types";
-import { supabase } from "../../helpers/supabaseClient";
+import { renderHook, act } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
+import { useSupabase } from '../useSupabase';
+import { supabase } from '../../helpers/supabaseClient';
+import { TaskProvider } from '../../contexts/TaskContext';
+import { ReactNode } from 'react';
 
-export function useSupabase(table: string) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const { setTasks } = useTasks();
+const mockQueryBuilder = {
+  select: jest.fn().mockResolvedValue({ data: [], error: null }),
+  insert: jest.fn().mockResolvedValue({ error: null }),
+  update: jest.fn().mockResolvedValue({ error: null }),
+  delete: jest.fn().mockResolvedValue({ error: null }),
+};
 
-  const getData = useCallback(async (): Promise<TaskItemType[] | undefined> => {
-    setLoading(true);
+jest.mock('../../helpers/supabaseClient', () => ({
+  supabase: {
+    from: jest.fn(() => mockQueryBuilder),
+  },
+}));
 
-    try {
-      const { data, error } = await supabase.from(table).select();
+describe('useSupabase', () => {
+  it('should get data', async () => {
+    const wrapper = ({ children }: { children?: ReactNode }) => <TaskProvider>{children}</TaskProvider>;
+    const { result } = renderHook(() => useSupabase('table'), { wrapper });
+  
+    act(() => {
+      result.current.getData();
+    });
+  
+    await waitFor(() => expect(supabase.from).toHaveBeenCalledWith('table'));
+    expect(mockQueryBuilder.select).toHaveBeenCalled();
+  })
 
-      if (error) throw error;
-      if (data) setTasks(data);
+  it('should add data', async () => {
+    const wrapper = ({ children }: { children?: ReactNode }) => <TaskProvider>{children}</TaskProvider>;
+    const { result } = renderHook(() => useSupabase('table'), { wrapper });
+    const newItem = { name: 'New item', description: 'New description' };
+  
+    act(() => {
+      result.current.addData(newItem);
+    });
+  
+    await waitFor(() => expect(supabase.from).toHaveBeenCalledWith('table'));
+    expect(mockQueryBuilder.insert).toHaveBeenCalledWith(newItem);
+  });
+  
+  it('should edit data', async () => {
+    const wrapper = ({ children }: { children?: ReactNode }) => <TaskProvider>{children}</TaskProvider>;
+    const { result } = renderHook(() => useSupabase('table'), { wrapper });
+    const updatedItem = { id: 1, name: 'Updated item', description: 'Updated description' };
+  
+    act(() => {
+      result.current.editData(updatedItem.id, updatedItem);
+    });
+  
+    await waitFor(() => expect(supabase.from).toHaveBeenCalledWith('table'));
+    expect(mockQueryBuilder.update).toHaveBeenCalledWith(updatedItem);
+  });
 
-      return data || [];
-    } catch (error) {
-      setError(error instanceof Error ? error : new Error(String(error)));
-    } finally {
-      setLoading(false);
-    }
-  }, [table, setTasks]);
-
-  const addData = useCallback(
-    async (item: Omit<TaskItemType, 'id'>) => {
-      setLoading(true);
-
-      try {
-        const { error } = await supabase.from(table).insert(item);
-
-        if (error) throw error;
-
-        await getData();
-      } catch (error) {
-        setError(error instanceof Error ? error : new Error(String(error)));
-      } finally {
-        setLoading(false);
-      }
-    },
-    [table, getData]
-  );
-
-  const editData = useCallback(
-    async (id: number, item: TaskItemType) => {
-      setLoading(true);
-
-      try {
-        const { error } = await supabase.from(table).update(item).eq("id", id);
-
-        if (error) throw error;
-
-        await getData();
-      } catch (error) {
-        setError(error instanceof Error ? error : new Error(String(error)));
-      } finally {
-        setLoading(false);
-      }
-    },
-    [table, getData]
-  );
-
-  const deleteData = useCallback(
-    async (id: number) => {
-      setLoading(true);
-      
-      try {
-        const { error } = await supabase.from(table).delete().eq("id", id);
-
-        if (error) throw error;
-
-        await getData();
-      } catch (error) {
-        setError(error instanceof Error ? error : new Error(String(error)));
-      } finally {
-        setLoading(false);
-      }
-    },
-    [table, getData]
-  );
-
-  return { addData, editData, deleteData, getData, loading, error };
-}
+  it('should delete data', async () => {
+    const wrapper = ({ children }: { children?: ReactNode }) => <TaskProvider>{children}</TaskProvider>;
+    const { result } = renderHook(() => useSupabase('table'), { wrapper });
+    const idToDelete = 1;
+  
+    await act(async () => {
+      await result.current.deleteData(idToDelete);
+    });
+  
+    await waitFor(() => expect(supabase.from).toHaveBeenCalledWith('table'));
+    await waitFor(() => expect(mockQueryBuilder.delete).toHaveBeenCalled());
+  });
+});

@@ -1,4 +1,4 @@
-import { TaskItemType } from "../views/TaskManagement/types";
+import { TaskItemType } from "../views/TaskManager/types";
 
 export type TaskContextProps = {
   tasks: TaskItemType[];

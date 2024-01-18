@@ -1,10 +1,10 @@
 import React, { createContext, useReducer } from "react";
-import { TaskItemType } from "../views/TaskManagement/types";
+import { TaskItemType } from "../views/TaskManager/types";
 import { TaskContextProps } from "./types";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 
-interface TaskProviderProps {
+export type TaskProviderProps = {
   children: React.ReactNode;
 }
 

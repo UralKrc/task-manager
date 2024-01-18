@@ -1,5 +1,5 @@
 import { useTasks } from "../../hooks/useTasks";
-import { TaskItemType } from "../../views/TaskManagement/types";
+import { TaskItemType } from "../../views/TaskManager/types";
 import TaskItem from "../TaskItem";
 import { Tasks, Title, Container, EmptyState, EmptyStateText } from "./styles";
 

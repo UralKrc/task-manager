@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { supabase } from "../helpers/supabaseClient";
 import { useTasks } from "./useTasks";
-import { TaskItemType } from "../views/TaskManagement/types";
+import { TaskItemType } from "../views/TaskManager/types";
 
 export function useSupabase(table: string) {
   const [loading, setLoading] = useState(false);
