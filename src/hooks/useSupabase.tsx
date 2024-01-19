@@ -10,14 +10,16 @@ export function useSupabase(table: string) {
 
   const getData = useCallback(async (): Promise<TaskItemType[] | undefined> => {
     setLoading(true);
-
     try {
       const { data, error } = await supabase.from(table).select();
-
+  
       if (error) throw error;
-      if (data) setTasks(data);
-
-      return data || [];
+  
+      const sortedData = data ? [...data].sort((a, b) => a.id - b.id) : [];
+  
+      setTasks(sortedData);
+  
+      return sortedData;
     } catch (error) {
       setError(error instanceof Error ? error : new Error(String(error)));
     } finally {
